@@ -1,4 +1,3 @@
-import utils.py
 import person.py
 
 def high_ranking_partner_not_proposed(person):
