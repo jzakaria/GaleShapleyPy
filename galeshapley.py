@@ -1,34 +1,10 @@
 import random
-
-class Person:
-	def __init__(self):
-	    self.id = None
-	    self.preference = {}
-	    self.engaged = None
-	    self.group = None
-
-class PersonList:
-	def __init__(self, name=None, ls=[]):
-		self.name = name
-		self.ls = ls
-
-def add_person_to_list(person, list_of_persons):
-	person.id = len(list_of_persons.ls)+1
-	person.group = list_of_persons.name
-	list_of_persons.ls.append(person)
-
-def assign_preferences(person, otherlist):
-	rn = range(1,len(otherlist)+1)
-	random.shuffle(rn)
-	dt = {}
-	for choice in rn:
-		dt[choice] = False
-	person.preferences = dt
+import person.py
 
 def high_ranking_partner_not_proposed(person):
-	for key in person.preference:
-		if not person.preference[key]:
-			return key
+	for choice in person.preference:
+		if not person.preference[choice]:
+			return choice
 	return None
 
 #checks if person is free and hasn't proposed to every other partner
@@ -51,8 +27,8 @@ def propose(person1, person2):
 # This is problematic because their ids may be the same therefore
 # we somehow need to keep track what list each belongs to
 def become_engaged(person1, person2):
-	person1.engaged = person2.id
-	person2.engaged = person1.id
+	person1.engaged = (person2.group, person2.id)
+	person2.engaged = (person1.group, person1.id)
 
 
 def galeshapley (men, women):
@@ -61,14 +37,15 @@ def galeshapley (men, women):
 	while ls:
 		m = ls[0]
 		w = high_ranking_partner_not_proposed(m)
-		if not w.engaged
-			propose(m, w)
-			become_engaged(m, w)
-		else
-			propose(m,w)
-			m1 = w.engaged
-			if w_prefers(m, m1):
-				become_engaged(m,w)
-				m1.engaged = None
-				ls.append(m1)
-				ls = ls[1:]
+		if w:
+			if not w.engaged
+				propose(m, w)
+				become_engaged(m, w)
+			else
+				propose(m,w)
+				m1 = w.engaged
+				if w_prefers(m, m1):
+					become_engaged(m,w)
+					m1.engaged = None
+					ls.append(m1)
+					ls = ls[1:]
